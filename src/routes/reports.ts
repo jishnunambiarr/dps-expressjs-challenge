@@ -2,6 +2,12 @@ import { Router, Request, Response } from 'express';
 import db from '../services/db.service';
 export const router = Router();
 
+interface Report {
+	id: string;
+	text: string | null;
+	projectid: string;
+}
+
 // reports CRUD operations
 router.get('/', (request: Request, response: Response) => {
 	try {
@@ -14,6 +20,49 @@ router.get('/', (request: Request, response: Response) => {
 		response.status(500).json({
 			success: false,
 			error: 'Failed to fetch reports',
+		});
+	}
+});
+
+router.get('/special', (request: Request, response: Response) => {
+	try {
+		const reports = db.query('SELECT * FROM reports');
+		const filteredReports = (reports as Report[]).filter((report) => {
+			if (!report.text) return false;
+			const words = report.text
+				.toLowerCase()
+				.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+				.split(/\s+/)
+				.filter((word) => word.length > 0);
+
+			const wordCount = new Map();
+			for (const word of words) {
+				wordCount.set(word, (wordCount.get(word) || 0) + 1);
+			}
+
+			for (const count of wordCount.values()) {
+				if (count >= 3) {
+					return true;
+				}
+			}
+			return false;
+		});
+
+		if (filteredReports.length === 0) {
+			return response.status(404).json({
+				success: false,
+				error: 'No reports found with words repeated 3 or more times',
+			});
+		}
+
+		response.status(200).json({
+			success: true,
+			data: filteredReports,
+		});
+	} catch (error) {
+		response.status(500).json({
+			success: false,
+			error: 'Failed to fetch special reports',
 		});
 	}
 });

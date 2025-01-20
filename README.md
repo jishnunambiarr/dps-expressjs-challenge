@@ -41,6 +41,10 @@ Authorization: Bearer Password123
 
 ### Projects
 
+### GET /
+- "Hello Word!"
+
+  
 #### GET /projects
 - Retrieves all projects
 - Status: 200 (Success), 500 (Error)

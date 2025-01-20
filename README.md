@@ -4,6 +4,16 @@
 
 This repository contains a very basic web application based on Typescript and Express.js. Main application file is `index.ts`. Node and npm are required.
 
+## Project Context
+
+You will develop a backend system for managing data about a company's projects and their associated reports. Each project may have multiple reports linked to it, though having reports is not mandatory. Start your implementation using the provided SQLite database([db/db.sqlite3](./db/db.sqlite3)).
+
+Refer to the database schema provided for understanding the data structure 👇
+
+![Database schema](images/database_schema.png)
+
+# Solution
+
 ## Environment Setup
 
 Ensure you have Node.js (v14.x or later) and npm (v6.x or later) installed.  
@@ -16,27 +26,82 @@ npm run dev
 
 The application will then be accessible at http://localhost:3000.
 
-## Project Context
+# DPS Backend API
 
-You will develop a backend system for managing data about a company's projects and their associated reports. Each project may have multiple reports linked to it, though having reports is not mandatory. Start your implementation using the provided SQLite database([db/db.sqlite3](./db/db.sqlite3)).
+A RESTful API built with TypeScript and Express.js for managing projects and their associated reports.
 
-Refer to the database schema provided for understanding the data structure 👇
+## Authentication
 
-![Database schema](images/database_schema.png)
+All endpoints require authentication token:
+```
+Authorization: Bearer Password123
+```
 
-NOTE: You can use ([db.service.ts](./src/services/db.service.ts)) to handle SQL queries to the database.
+## API Endpoints
 
-## Challenge Tasks
+### Projects
 
--   **Fork this project:** Start by forking this repository
--   **REST API Development:** Design and implement a RESTful API to create, read, update, and delete projects and their reports.
--   **Special API Endpoint:** Create an API endpoint that retrieves all reports where the same word appears at least three times.
--   **Optional:** Secure all API routes with a hardcoded authentication token ("Password123").
--   **Submission:** After completing the challenge, email us the URL of your GitHub repository.
--   **Further information:**
-    -   If there is anything unclear regarding requirements, contact us by replying to our email.
-    -   Use small commits, we want to see your progress towards the solution.
-    -   Code clean and follow the best practices.
+#### GET /projects
+- Retrieves all projects
+- Status: 200 (Success), 500 (Error)
 
-\
-Happy coding!
+#### GET /projects/:id
+- Retrieves specific project
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+#### POST /projects
+- Creates new project
+- Body: `{ "name": "string", "description": "string" }`
+- Status: 201 (Created), 500 (Error)
+
+#### PUT /projects
+- Updates existing project
+- Body: `{ "id": "string", "name": "string", "description": "string" }`
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+#### DELETE /projects/:id
+- Deletes project and associated reports
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+### Reports
+
+#### GET /reports
+- Retrieves all reports
+- Query param: `?query=word` (finds reports with word ≥3 times)
+- Status: 200 (Success), 404 (Not Found for queries), 500 (Error)
+
+#### GET /reports/:id
+- Retrieves specific report
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+#### POST /reports
+- Creates new report
+- Body: `{ "text": "string", "projectid": "string" }`
+- Status: 201 (Created), 400 (Invalid Project ID), 500 (Error)
+
+#### PUT /reports
+- Updates existing report
+- Body: `{ "id": "string", "text": "string", "projectid": "string" }`
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+#### DELETE /reports/:id
+- Deletes specific report
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+### Project Reports
+
+#### GET /projectReports/projects/:projectId/reports
+- Retrieves all reports for specific project
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+#### GET /projectReports/projects/:projectId/reports/:reportId
+- Retrieves specific report from specific project
+- Status: 200 (Success), 404 (Not Found), 500 (Error)
+
+## Error Handling
+
+All endpoints include handling for:
+- Invalid requests
+- Not found resources
+- Server errors
+- Authentication failures

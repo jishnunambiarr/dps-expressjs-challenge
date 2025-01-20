@@ -41,6 +41,10 @@ Authorization: Bearer Password123
 
 ### Projects
 
+### GET /
+- "Hello Word!"
+
+  
 #### GET /projects
 - Retrieves all projects
 - Status: 200 (Success), 500 (Error)
@@ -65,7 +69,7 @@ Authorization: Bearer Password123
 
 ### Reports
 
-#### GET /reports
+#### GET /reports (Includes the Special Endpoint)
 - Retrieves all reports
 - Query param: `?query=word` (finds reports with word ≥3 times)
 - Status: 200 (Success), 404 (Not Found for queries), 500 (Error)
@@ -90,11 +94,11 @@ Authorization: Bearer Password123
 
 ### Project Reports
 
-#### GET /projectReports/projects/:projectId/reports
+#### GET /projectReports/:projectId/reports
 - Retrieves all reports for specific project
 - Status: 200 (Success), 404 (Not Found), 500 (Error)
 
-#### GET /projectReports/projects/:projectId/reports/:reportId
+#### GET /projectReports/:projectId/reports/:reportId
 - Retrieves specific report from specific project
 - Status: 200 (Success), 404 (Not Found), 500 (Error)
 

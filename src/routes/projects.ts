@@ -47,9 +47,7 @@ router.get('/:id', (request: Request, response: Response) => {
 router.put('/', (request: Request, response: Response) => {
 	try {
 		const { id, name, description } = request.body;
-		console.log('Update request body:', { id, name, description });
 
-		// Convert id to string to match table schema
 		const stringId = id.toString();
 		const stringdescription = description.toString();
 
@@ -60,7 +58,6 @@ router.put('/', (request: Request, response: Response) => {
 				id: stringId,
 			},
 		);
-		console.log('Existing report:', existingProject);
 
 		if (!existingProject || existingProject.length === 0) {
 			return response.status(404).json({
@@ -69,7 +66,7 @@ router.put('/', (request: Request, response: Response) => {
 			});
 		}
 
-		const result = db.run(
+		db.run(
 			'UPDATE projects SET name = :name, description = :description WHERE id = :id',
 			{
 				id: stringId,
@@ -77,17 +74,16 @@ router.put('/', (request: Request, response: Response) => {
 				description: stringdescription,
 			},
 		);
-		console.log('Update result:', result);
 
 		response.status(200).json({
 			success: true,
 			data: 'Project updated successfully.',
 		});
 	} catch (error) {
-		console.error('Error updating Project:', error);
+		console.error('Error updating project:', error);
 		response.status(500).json({
 			success: false,
-			error: 'Failed to update Project',
+			error: 'Failed to update project',
 		});
 	}
 });
@@ -101,7 +97,6 @@ router.post('/', (request: Request, response: Response) => {
 			maxId: number | null;
 		}
 
-		// Get the maximum ID from projects table with proper typing
 		const maxIdResult = db.query(
 			'SELECT MAX(CAST(id AS INTEGER)) as maxId FROM projects',
 		) as MaxIdResult[];
@@ -125,7 +120,7 @@ router.post('/', (request: Request, response: Response) => {
 			},
 		});
 	} catch (error) {
-		console.error('Error creating Project:', error);
+		console.error('Error creating project:', error);
 		response.status(500).json({
 			success: false,
 			error: 'Failed to create project',

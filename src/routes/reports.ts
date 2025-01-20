@@ -16,7 +16,7 @@ router.get('/', (request: Request, response: Response) => {
 	try {
 		const queryWord = request.query.query?.toString().toLowerCase();
 
-		// If no query parameter, return all reports (keeping original functionality)
+		// If no query parameter, return all reports
 		if (!queryWord) {
 			const reports = db.query('SELECT * FROM reports');
 			return response.status(200).json({

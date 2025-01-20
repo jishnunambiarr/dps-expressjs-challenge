@@ -65,9 +65,8 @@ Authorization: Bearer Password123
 
 ### Reports
 
-#### GET /reports
+#### GET /reports (Includes the Special Endpoint)
 - Retrieves all reports
-### Special Endpoint
 - Query param: `?query=word` (finds reports with word ≥3 times)
 - Status: 200 (Success), 404 (Not Found for queries), 500 (Error)
 

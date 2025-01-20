@@ -169,25 +169,3 @@ router.delete('/:id', (request: Request, response: Response) => {
 		});
 	}
 });
-
-router.delete('/cleanup/null-ids', (request: Request, response: Response) => {
-	try {
-		const result = db.run('DELETE FROM projects WHERE id IS NULL');
-
-		if (result.changes == 0) {
-			return response.status(404).json({
-				success: false,
-				error: 'No reports with null IDs found.',
-			});
-		}
-		response.status(200).json({
-			success: true,
-			data: 'Reports with null IDs deleted successfully',
-		});
-	} catch (error) {
-		response.status(500).json({
-			success: false,
-			error: 'Failed to delete reports from the database.',
-		});
-	}
-});
